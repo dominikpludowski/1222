@@ -1,0 +1,96 @@
+#include <iostream>
+using namespace std;
+
+char board[3][3] = { {' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '} };
+char player = 'X';
+
+void drawBoard() {
+    cout << "  1 2 3" << endl;
+    cout << " -------" << endl;
+    for (int i = 0; i < 3; i++) {
+        cout << i+1 << "|";
+        for (int j = 0; j < 3; j++) {
+            cout << board[i][j] << "|";
+        }
+        cout << endl << " -------" << endl;
+    }
+}
+
+void getPlayerMove() {
+    int row, col;
+    cout << "Player " << player << ", enter your move (row column): ";
+    cin >> row >> col;
+    row--;
+    col--;
+    if (row < 0 || row > 2 || col < 0 || col > 2) {
+        cout << "Invalid move. Try again." << endl;
+        getPlayerMove();
+    } else if (board[row][col] != ' ') {
+        cout << "That square is already taken. Try again." << endl;
+        getPlayerMove();
+    } else {
+        board[row][col] = player;
+    }
+}
+
+void switchPlayer() {
+    if (player == 'X') {
+        player = 'O';
+    } else {
+        player = 'X';
+    }
+}
+
+bool checkWin() {
+    // Check rows
+    for (int i = 0; i < 3; i++) {
+        if (board[i][0] != ' ' && board[i][0] == board[i][1] && board[i][1] == board[i][2]) {
+            return true;
+        }
+    }
+    // Check columns
+    for (int j = 0; j < 3; j++) {
+        if (board[0][j] != ' ' && board[0][j] == board[1][j] && board[1][j] == board[2][j]) {
+            return true;
+        }
+    }
+    // Check diagonals
+    if (board[0][0] != ' ' && board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
+        return true;
+    }
+    if (board[0][2] != ' ' && board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
+        return true;
+    }
+    return false;
+}
+
+bool checkTie() {
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (board[i][j] == ' ') {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+int main() {
+    cout << "Welcome to Tic-Tac-Toe!" << endl;
+    while (true) {
+        drawBoard();
+        getPlayerMove();
+        if (checkWin()) {
+            drawBoard();
+            cout << "Player " << player << " wins!" << endl;
+            break;
+        } else if (checkTie()) {
+            drawBoard();
+            cout << "It's a tie!" << endl;
+            break;
+        } else {
+            switchPlayer();
+        }
+    }
+    return 0;
+}
